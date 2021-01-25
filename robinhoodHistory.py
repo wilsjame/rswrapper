@@ -16,11 +16,12 @@ load_dotenv(find_dotenv())
 #print(os.environ['RH_USERNAME'])
 #print(os.environ['RH_PASSWORD'])
 login = robin_stocks.login(os.environ['RH_USERNAME'], os.environ['RH_PASSWORD'])
+print(login)
 
 # Time between data points: 15second, 5minute, 10minute, hour, day, or week
 INTERVAL = '10minute'
 # Entire time frame to collect data points: hour, day, week, month, 3month, year, 5year
-SPAN = 'week'
+SPAN = 'hour'
 
 # historicalData is a list of dictionaries containing every key/value pair
 historicalData = robin_stocks.get_crypto_historicals('BTC', interval=INTERVAL, span=SPAN, bounds='24_7', info=None)
@@ -36,7 +37,7 @@ timeStamps = [datetime.datetime.strptime(data, "%Y-%m-%dT%H:%M:%SZ").timestamp()
 print(closePrice)
 print(timeStamps)
 
-numpy.save('btcCostArray.npy', closePrice)
-numpy.save('btcTimeArray.npy', timeStamps)
+numpy.save('btcCostArray.npy', numpy.array(closePrice).reshape(-1,1))
+numpy.save('btcTimeArray.npy', numpy.array(timeStamps).reshape(-1,1))
 
 robin_stocks.logout()
